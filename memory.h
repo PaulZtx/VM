@@ -7,14 +7,15 @@
 
 #define HEAP 1024 * 1024 * 1 // 1 Mb
 
-typedef struct{
+
+typedef struct MemoryBlock{
     size_t size;
     bool free;
     struct MemoryBlock *next;
 } MemoryBlock;
 
-static MemoryBlock* rootMemoryBlock;
-static void* pool;
+
+#define META_MEMORY sizeof(MemoryBlock)
 
 #define GROW_CAPACITY(capacity) \
     ((capacity) < 8 ? 8 : (capacity) * 2)
@@ -29,6 +30,8 @@ static void* pool;
     reallocate(pointer, sizeof(type) * (oldCount), 0)
 
 void* reallocate(void* pointer, size_t oldSize, size_t newSize);
+void freeBlock(MemoryBlock* block);
+MemoryBlock* mallocBlock(size_t size);
 void initialize();
 
 
