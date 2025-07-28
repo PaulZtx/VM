@@ -30,9 +30,9 @@ typedef struct MemoryBlock{
     reallocate(pointer, sizeof(type) * (oldCount), 0)
 
 void* reallocate(void* pointer, size_t oldSize, size_t newSize);
-void freeBlock(MemoryBlock* block);
-MemoryBlock* mallocBlock(size_t size);
-void initialize();
+void freeMemoryBlock(MemoryBlock* block);
+MemoryBlock* mallocMemoryBlock(size_t size);
+void initializeMemoryPool();
 
 
 #endif //MEMORY_H

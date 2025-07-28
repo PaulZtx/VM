@@ -35,7 +35,7 @@ void* reallocate(void* pointer, size_t oldSize, const size_t newSize) {
 
 }
 
-void freeBlock(MemoryBlock *block) {
+void freeMemoryBlock(MemoryBlock *block) {
     if (!block)
         return;
 
@@ -44,7 +44,7 @@ void freeBlock(MemoryBlock *block) {
 }
 
 
-MemoryBlock* mallocBlock(const size_t size) {
+MemoryBlock* mallocMemoryBlock(const size_t size) {
     MemoryBlock* tail = NULL;
     MemoryBlock* block = lookFreeBlock(size, &tail);
 
@@ -71,7 +71,7 @@ MemoryBlock* mallocBlock(const size_t size) {
     return (MemoryBlock*)((char*)block + META_MEMORY);
 }
 
-void initialize() {
+void initializeMemoryPool() {
     if (pool == NULL) {
         pool = malloc(HEAP);
     }

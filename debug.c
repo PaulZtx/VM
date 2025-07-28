@@ -51,3 +51,8 @@ int disassembleInstruction(const Chunk *chunk, const int offset) {
         return offset + 1;
     }
 }
+
+void disassembleMemoryBlock(MemoryBlock *block) {
+    auto metaInfo = (MemoryBlock *)((char*)block - META_MEMORY);
+    printf("ADDR: %p; SIZE: %llu;\n", block, metaInfo->size);
+}
