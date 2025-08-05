@@ -6,7 +6,7 @@
 #include "vm.h"
 
 #include <stdio.h>
-
+#include "compiler.h"
 #include "debug.h"
 
 VM vm;
@@ -44,11 +44,16 @@ static InterpretResult run() {
                 push(constant);
                 break;
             }
-            case OP_ADD:      BINARY_OP(+); break;
-            case OP_SUBTRACT: BINARY_OP(-); break;
-            case OP_MULTIPLY: BINARY_OP(*); break;
-            case OP_DIVIDE:   BINARY_OP(/); break;
-            case OP_NEGATE:   push(-pop()); break;
+            case OP_ADD: BINARY_OP(+);
+                break;
+            case OP_SUBTRACT: BINARY_OP(-);
+                break;
+            case OP_MULTIPLY: BINARY_OP(*);
+                break;
+            case OP_DIVIDE: BINARY_OP(/);
+                break;
+            case OP_NEGATE: push(-pop());
+                break;
             case OP_RETURN: {
                 printValue(pop());
                 printf("\n");
@@ -72,6 +77,11 @@ void initVM() {
 }
 
 void freeVM() {
+}
+
+InterpretResult interpret(const char *source) {
+    compile(source);
+    return INTERPRET_OK;
 }
 
 InterpretResult interpret(Chunk *chunk) {
