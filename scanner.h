@@ -5,6 +5,7 @@
 #ifndef SCANNER_H
 #define SCANNER_H
 
+// Типы токенов
 typedef enum {
     // Single-character tokens.
     TOKEN_LEFT_PAREN, TOKEN_RIGHT_PAREN,
@@ -27,7 +28,10 @@ typedef enum {
     TOKEN_ERROR, TOKEN_EOF
   } TokenType;
 
-
+/*
+ * Токен
+ * Включает в себя тип, начало токена, длину и строку в исходном файле
+ */
 typedef struct {
     TokenType type;
     const char* start;

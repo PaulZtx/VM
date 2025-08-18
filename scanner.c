@@ -25,13 +25,15 @@ void initScanner(const char* source) {
     scanner.line = 1;
 }
 
-static bool isAlpha(char c) {
+// Проверка на соответствие буквы
+static bool isAlpha(const char c) {
     return (c >= 'a' && c <= 'z') ||
            (c >= 'A' && c <= 'Z') ||
             c == '_';
 }
 
-static bool isDigit(char c) {
+// Проверка на соответствие цифры
+static bool isDigit(const char c) {
     return c >= '0' && c <= '9';
 }
 
@@ -42,18 +44,26 @@ static bool isAtEnd() {
     return *scanner.current == '\0';
 }
 
+// Переход к следующему символу
 static char advance() {
     scanner.current++;
     return scanner.current[-1];
 }
 
+/*
+ *  Получение текущего значения
+ */
 static char peek() {
     return *scanner.current;
 }
 
+/*
+ *  Получение следующего значения
+ *  В случае конца строки возвращает нул терминатор
+ */
 static char peekNext() {
     if (isAtEnd()) return '\0';
-    return scanner.current[1];
+    return scanner.current[1]; // Позволяет получить следующий элемент от текущего указателя
 }
 
 
@@ -75,6 +85,9 @@ static Token errorToken(const char* message) {
     return token;
 }
 
+/*
+ * Пропуск пробелов, табуляций и переносов строк
+ */
 static void skipWhitespace() {
     for (;;) {
         const char c = peek();
@@ -102,9 +115,13 @@ static void skipWhitespace() {
     }
 }
 
+/*
+ * Проверка токенов на ключевые слова в языке
+ */
 static TokenType checkKeyword(const int start, int length,
                               const char *rest, const TokenType type) {
     if (scanner.current - scanner.start == start + length &&
+        // Проверка length байт двух токенов
         memcmp(scanner.start + start, rest, length) == 0) {
         return type;
     }
@@ -112,6 +129,7 @@ static TokenType checkKeyword(const int start, int length,
     return TOKEN_IDENTIFIER;
 }
 
+// Определение типа токена
 static TokenType identifierType() {
 
     switch (scanner.start[0]) {
@@ -148,6 +166,7 @@ static TokenType identifierType() {
     return TOKEN_IDENTIFIER;
 }
 
+// Считывание и определение токена
 static Token identifier() {
     while (isAlpha(peek()) || isDigit(peek())) advance();
     return makeToken(identifierType());
@@ -189,6 +208,9 @@ static bool match(const char expected) {
     return true;
 }
 
+/*
+ * Сканирование введенных токенов
+ */
 Token scanToken() {
     skipWhitespace();
     scanner.start = scanner.current;
