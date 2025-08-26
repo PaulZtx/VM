@@ -30,6 +30,12 @@ void disassembleChunk(Chunk *chunk, const char *name) {
 
 }
 
+/**
+ * 
+ * @param chunk Чанк данных
+ * @param offset Сдвиг по адресу
+ * @return Сдвиг от начала инструкций
+ */
 int disassembleInstruction(const Chunk *chunk, const int offset) {
     printf("%04d ", offset);
 
@@ -40,7 +46,7 @@ int disassembleInstruction(const Chunk *chunk, const int offset) {
         printf("%4d ", chunk->lines[offset]);
     }
 
-    uint8_t instruction = chunk->code[offset];
+    const uint8_t instruction = chunk->code[offset];
     switch (instruction) {
         case OP_RETURN:
             return simpleInstruction("OP_RETURN", offset);
@@ -62,7 +68,11 @@ int disassembleInstruction(const Chunk *chunk, const int offset) {
     }
 }
 
+/**
+ *
+ * @param block Указатель на блок памяти
+ */
 void disassembleMemoryBlock(MemoryBlock *block) {
-    auto metaInfo = (MemoryBlock *)((char*)block - META_MEMORY);
+    const auto metaInfo = (MemoryBlock *)((char*)block - META_MEMORY);
     printf("ADDR: %p; SIZE: %llu;\n", block, metaInfo->size);
 }

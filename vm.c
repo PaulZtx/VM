@@ -13,6 +13,7 @@ VM vm;
 
 static InterpretResult run() {
 
+
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.values[READ_BYTE()])
 #define BINARY_OP(op) \
@@ -26,7 +27,7 @@ static InterpretResult run() {
     for (;;) {
 #ifdef DEBUG_TRACE_EXECUTION
         printf("          ");
-        for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
+        for (const Value* slot = vm.stack; slot < vm.stackTop; slot++) {
             printf("[ ");
             printValue(*slot);
             printf(" ]");
@@ -68,10 +69,12 @@ static InterpretResult run() {
 
 }
 
+// сброс стека
 static void resetStack() {
     vm.stackTop = vm.stack;
 }
 
+// инициализация виртуальной машины
 void initVM() {
     resetStack();
 }
@@ -80,17 +83,32 @@ void freeVM() {
 }
 
 InterpretResult interpret(const char *source) {
-    compile(source);
-    return INTERPRET_OK;
-}
+    Chunk chunk;
+    initChunk(&chunk);
 
-InterpretResult interpret(Chunk *chunk) {
-    vm.chunk = chunk;
+    if (!compile(source, &chunk)) {
+        freeChunk(&chunk);
+        return INTERPRET_COMPILE_ERROR;
+    }
+
+    vm.chunk = &chunk;
     vm.ip = vm.chunk->code;
-    return run();
+
+    const InterpretResult result = run();
+
+    freeChunk(&chunk);
+    return result;
 }
 
-void push(Value value) {
+// Запуск интерпретатора
+// InterpretResult interpret(Chunk *chunk) {
+//     vm.chunk = chunk;
+//     vm.ip = vm.chunk->code;
+//     return run();
+// }
+
+// Добавление значения в стек
+void push(const Value value) {
     *vm.stackTop = value;
     vm.stackTop++;
 }

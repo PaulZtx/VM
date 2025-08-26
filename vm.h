@@ -9,6 +9,7 @@
 
 #define STACK_MAX 256
 
+// Виртуальная машина для обработки команд
 typedef struct {
     Chunk* chunk;
     uint8_t* ip;
@@ -16,11 +17,12 @@ typedef struct {
     Value* stackTop;
 } VM;
 
+// Результаты работы виртуальной машины
 typedef enum {
     INTERPRET_OK,
     INTERPRET_COMPILE_ERROR,
     INTERPRET_RUNTIME_ERROR
-  } InterpretResult;
+} InterpretResult;
 
 
 void initVM();

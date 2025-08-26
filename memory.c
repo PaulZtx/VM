@@ -35,11 +35,15 @@ void* reallocate(void* pointer, size_t oldSize, const size_t newSize) {
 
 }
 
+/**
+ * @brief Освобождение блока памяти
+ * @param block Блок памяти
+ */
 void freeMemoryBlock(MemoryBlock *block) {
     if (!block)
         return;
 
-    MemoryBlock* blockNew = (MemoryBlock*)((char*)block - META_MEMORY);
+    const auto blockNew = (MemoryBlock*)((char*)block - META_MEMORY);
     blockNew->free = true;
 }
 

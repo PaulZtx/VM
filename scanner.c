@@ -16,7 +16,7 @@ typedef struct {
 
 Scanner scanner;
 
-/*
+/**
  *  Инициализация сканера
  */
 void initScanner(const char* source) {
@@ -129,7 +129,7 @@ static TokenType checkKeyword(const int start, int length,
     return TOKEN_IDENTIFIER;
 }
 
-// Определение типа токена
+// Определение типа токена, проверка на ключевые слова
 static TokenType identifierType() {
 
     switch (scanner.start[0]) {
@@ -172,6 +172,10 @@ static Token identifier() {
     return makeToken(identifierType());
 }
 
+/**
+ * TODO: Проверять корректность как в случае со строками
+ * @return Токен числа
+ */
 static Token number() {
     while (isDigit(peek())) advance();
 
@@ -186,7 +190,11 @@ static Token number() {
     return makeToken(TOKEN_NUMBER);
 }
 
-
+/**
+ *
+ * @brief Проверка на строку
+ * @return Тип токена с типом "строка" или ошибка
+ */
 static Token string() {
     while (peek() != '"' && !isAtEnd()) {
         if (peek() == '\n') scanner.line++;
@@ -200,7 +208,7 @@ static Token string() {
     return makeToken(TOKEN_STRING);
 }
 
-
+// Проверка на совпадение
 static bool match(const char expected) {
     if (isAtEnd()) return false;
     if (*scanner.current != expected) return false;
