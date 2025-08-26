@@ -216,8 +216,8 @@ static bool match(const char expected) {
     return true;
 }
 
-/*
- * Сканирование введенных токенов
+/**
+ * @brief Сканирование введенных токенов
  */
 Token scanToken() {
     skipWhitespace();

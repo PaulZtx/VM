@@ -145,7 +145,7 @@ static ParseRule* getRule(TokenType type);
 static void parsePrecedence(Precedence precedence);
 
 
-static void parsePrecedence(Precedence precedence) {
+static void parsePrecedence(const Precedence precedence) {
     advance();
     const ParseFn prefixRule = getRule(parser.previous.type)->prefix;
     if (prefixRule == NULL) {
@@ -254,6 +254,12 @@ static ParseRule* getRule(const TokenType type) {
     return &rules[type];
 }
 
+/**
+ * @brief Компиляция данных
+ * @param source Строковое представление токенов для парсинга
+ * @param chunk Чанк данных
+ * @return Признак отсутствия ошибки
+ */
 bool compile(const char* source, Chunk* chunk) {
     initScanner(source);
     compilingChunk = chunk;
