@@ -5,17 +5,17 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#define HEAP 1024 * 1024 * 1 // 1 Mb
-
-
-typedef struct MemoryBlock{
-    size_t size;
-    bool free;
-    struct MemoryBlock *next;
-} MemoryBlock;
-
-
-#define META_MEMORY sizeof(MemoryBlock)
+// #define HEAP 1024 * 1024 * 1 // 1 Mb
+//
+//
+// typedef struct MemoryBlock{
+//     size_t size;
+//     bool free;
+//     struct MemoryBlock *next;
+// } MemoryBlock;
+//
+//
+// #define META_MEMORY sizeof(MemoryBlock)
 
 #define GROW_CAPACITY(capacity) \
     ((capacity) < 8 ? 8 : (capacity) * 2)
@@ -30,9 +30,9 @@ typedef struct MemoryBlock{
     reallocate(pointer, sizeof(type) * (oldCount), 0)
 
 void* reallocate(void* pointer, size_t oldSize, size_t newSize);
-void freeMemoryBlock(MemoryBlock* block);
-MemoryBlock* mallocMemoryBlock(size_t size);
-void initializeMemoryPool();
+// void freeMemoryBlock(MemoryBlock* block);
+// MemoryBlock* mallocMemoryBlock(size_t size);
+// void initializeMemoryPool();
 
 
 #endif //MEMORY_H

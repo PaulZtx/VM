@@ -9,12 +9,12 @@
 #include "value.h"
 
 void initValueArray(ValueArray* array) {
-    array->values = nullptr;
+    array->values = NULL;
     array->capacity = 0;
     array->count = 0;
 }
 
-void writeValueArray(ValueArray* array, Value value) {
+void writeValueArray(ValueArray* array, const Value value) {
     if (array->capacity < array->count + 1) {
         const int oldCapacity = array->capacity;
         array->capacity = GROW_CAPACITY(oldCapacity);

@@ -68,11 +68,11 @@ int disassembleInstruction(const Chunk *chunk, const int offset) {
     }
 }
 
-/**
- *
- * @param block Указатель на блок памяти
- */
-void disassembleMemoryBlock(MemoryBlock *block) {
-    const auto metaInfo = (MemoryBlock *)((char*)block - META_MEMORY);
-    printf("ADDR: %p; SIZE: %llu;\n", block, metaInfo->size);
-}
+// /**
+//  *
+//  * @param block Указатель на блок памяти
+//  */
+// void disassembleMemoryBlock(MemoryBlock *block) {
+//     const auto metaInfo = (MemoryBlock *)((char*)block - META_MEMORY);
+//     printf("ADDR: %p; SIZE: %llu;\n", block, metaInfo->size);
+// }

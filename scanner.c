@@ -8,16 +8,22 @@
 #include "common.h"
 #include "scanner.h"
 
+/**
+ * Структура сканера
+ */
 typedef struct {
+    // Начало сканирования
     const char* start;
+    // Текущая позиция
     const char* current;
+    // Строка, на которой сканер
     int line;
 } Scanner;
 
 Scanner scanner;
 
 /**
- *  Инициализация сканера
+ *  @brief Инициализация сканера
  */
 void initScanner(const char* source) {
     scanner.start = source;
@@ -37,36 +43,43 @@ static bool isDigit(const char c) {
     return c >= '0' && c <= '9';
 }
 
-/*
- * Проверка на конец ввода
+/**
+ * @brief Проверка на конец ввода
  */
 static bool isAtEnd() {
     return *scanner.current == '\0';
 }
 
-// Переход к следующему символу
+/**
+ * Переход к следующему символу
+ * @return Возврат предыдущего символа
+ */
 static char advance() {
     scanner.current++;
     return scanner.current[-1];
 }
 
-/*
+/**
  *  Получение текущего значения
  */
 static char peek() {
     return *scanner.current;
 }
 
-/*
+/**
  *  Получение следующего значения
- *  В случае конца строки возвращает нул терминатор
+ *  @return В случае конца строки возвращает нул терминатор
  */
 static char peekNext() {
     if (isAtEnd()) return '\0';
     return scanner.current[1]; // Позволяет получить следующий элемент от текущего указателя
 }
 
-
+/**
+ * Создание токена в соответствии с типом токена
+ * @param type Тип токена
+ * @return Токен по типу
+ */
 static Token makeToken(const TokenType type) {
     Token token;
     token.type = type;
@@ -76,6 +89,11 @@ static Token makeToken(const TokenType type) {
     return token;
 }
 
+/**
+ * Токен, сообщающий об ошибке
+ * @param message Сообщение об ошибке
+ * @return Токен, сообщающий об ошибке
+ */
 static Token errorToken(const char* message) {
     Token token;
     token.type = TOKEN_ERROR;
@@ -85,7 +103,7 @@ static Token errorToken(const char* message) {
     return token;
 }
 
-/*
+/**
  * Пропуск пробелов, табуляций и переносов строк
  */
 static void skipWhitespace() {

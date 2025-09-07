@@ -13,10 +13,17 @@
 #endif
 #include "scanner.h"
 
+/**
+ * Структура парсера
+ */
 typedef struct {
+    // Текущий токен
     Token current;
+    // Предыдущий токен
     Token previous;
+    // Наличие ошибки
     bool hadError;
+    // Паника?
     bool panicMode;
 } Parser;
 
@@ -81,7 +88,7 @@ static void errorAtCurrent(const char* message) {
 }
 
 /**
- * @brief Сканирование введенных данных на наличие ошибок
+ * @brief Сканирование токенов, получение текущего токена
  */
 static void advance() {
     parser.previous = parser.current;
@@ -94,6 +101,11 @@ static void advance() {
     }
 }
 
+/**
+ * Проверка типа токена на ожидаемый тип во время выполения
+ * @param type Тип токена
+ * @param message Сообщение, если ошибка
+ */
 static void consume(const TokenType type, const char* message) {
     if (parser.current.type == type) {
         advance();
@@ -117,7 +129,7 @@ static void emitReturn() {
 }
 
 static uint8_t makeConstant(const Value value) {
-    int constant = addConstant(currentChunk(), value);
+    const int constant = addConstant(currentChunk(), value);
     if (constant > UINT8_MAX) {
         error("Too many constants in one chunk.");
         return 0;
@@ -127,7 +139,7 @@ static uint8_t makeConstant(const Value value) {
 }
 
 
-static void emitConstant(Value value) {
+static void emitConstant(const Value value) {
     emitBytes(OP_CONSTANT, makeConstant(value));
 }
 
@@ -157,13 +169,14 @@ static void parsePrecedence(const Precedence precedence) {
 
     while (precedence <= getRule(parser.current.type)->precedence) {
         advance();
-        ParseFn infixRule = getRule(parser.previous.type)->infix;
+        const ParseFn infixRule = getRule(parser.previous.type)->infix;
         infixRule();
     }
 }
 
-
-
+/**
+ * Бинарные операции
+ */
 static void binary() {
     const TokenType operatorType = parser.previous.type;
     const ParseRule* rule = getRule(operatorType);
@@ -178,22 +191,32 @@ static void binary() {
     }
 }
 
-
+/**
+ * Обработка выражения
+ */
 static void expression() {
     parsePrecedence(PREC_ASSIGNMENT);
 }
 
-
+/**
+ * Обработка группировки
+ */
 static void grouping() {
     expression();
     consume(TOKEN_RIGHT_PAREN, "Expect ')' after expression.");
 }
 
+/**
+ * Обработка чисел
+ */
 static void number() {
     const double value = strtod(parser.previous.start, NULL);
     emitConstant(value);
 }
 
+/**
+ * Унарные операции
+ */
 static void unary() {
     const TokenType operatorType = parser.previous.type;
 
@@ -207,6 +230,9 @@ static void unary() {
     }
 }
 
+/**
+ * Набор правил для парсинга
+ */
 ParseRule rules[] = {
   [TOKEN_LEFT_PAREN]    = {grouping, NULL,   PREC_NONE},
   [TOKEN_RIGHT_PAREN]   = {NULL,     NULL,   PREC_NONE},
@@ -250,7 +276,16 @@ ParseRule rules[] = {
   [TOKEN_EOF]           = {NULL,     NULL,   PREC_NONE},
 };
 
+/**
+ * Получение правила для конкретного типа токена
+ * @param type Тип токена
+ * @return Правило по типу токена
+ */
 static ParseRule* getRule(const TokenType type) {
+    if (type < 0 || type >= sizeof(rules) / sizeof(rules[0])) {
+        fprintf(stderr, "FATAL: Invalid token type %d. The parser state is corrupted.\n", type);
+        exit(EXIT_FAILURE);
+    }
     return &rules[type];
 }
 
